@@ -1,35 +1,40 @@
-frontend:
-  build: ./frontend
-  container_name: frontend
-  ports:
-    - "80:80"
-  links:
-    - backend
-    - statsd
+version: '2'
+services:
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    depends_on:
+      - backend
+      - statsd
+    ports:
+      - "80:80"
+    links:
+      - backend
+      - statsd
 
-backend:
-  build: ./backend
-  container_name: backend
-  links:
-    - couchdb
-    - statsd
-  expose:
-   - "8080"
+  backend:
+    build: ./backend
+    container_name: backend
+    links:
+      - couchdb
+      - statsd
+    expose:
+      - "8080"
 
-couchdb:
-  build: ./couchdb
-  container_name: couchdb
-  volumes:
-   - ./couchdb/data:/usr/local/var/lib/couchdb
-  ports:
-   - "5984:5984"
+  couchdb:
+    build: ./couchdb
+    container_name: couchdb
+    volumes:
+      - ./couchdb/data:/usr/local/var/lib/couchdb
+    ports:
+      - "5984:5984"
 
-statsd:
-  build: ./statsd
-  container_name: statsd
-  expose:
-    - "8125"
-  ports:
-    - "8080:80"
-    - "81:81"
-    - "8126:8126"
+  statsd:
+    build: ./statsd
+    container_name: statsd
+    expose:
+      - "8125"
+    ports:
+      - "8080:80"
+      - "81:81"
+      - "8126:8126"
