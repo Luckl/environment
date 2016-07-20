@@ -5,14 +5,16 @@ frontend:
     - "80:80"
   links:
     - backend
+    - statsd
 
 backend:
   build: ./backend
   container_name: backend
   links:
     - couchdb
-  ports:
-   - "8080:8080"
+    - statsd
+  expose:
+   - "8080"
 
 couchdb:
   build: ./couchdb
@@ -21,3 +23,12 @@ couchdb:
    - ./couchdb/data:/usr/local/var/lib/couchdb
   ports:
    - "5984:5984"
+
+statsd:
+  build: ./statsd
+  container_name: statsd
+  expose:
+    - "8125"
+  ports:
+    - "8081:80"
+    - "8126:8126"
