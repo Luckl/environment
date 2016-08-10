@@ -1,23 +1,23 @@
-version: '2'
+version: '3'
 services:
   frontend:
     build: ./frontend
     container_name: frontend
     depends_on:
       - backend
-      - statsd
+      - grafana_graphite
     ports:
       - "80:80"
     links:
       - backend
-      - statsd
+      - grafana_graphite
 
   backend:
     build: ./backend
     container_name: backend
     links:
       - couchdb
-      - statsd
+      - grafana_graphite
     expose:
       - "8080"
 
@@ -29,12 +29,12 @@ services:
     ports:
       - "5984:5984"
 
-  statsd:
-    build: ./statsd
-    container_name: statsd
+  grafana_graphite:
+    build: ./grafana_graphite
+    container_name: grafana_graphite
     expose:
       - "8125"
     ports:
-      - "8080:80"
+      - "80:80"
       - "81:81"
       - "8126:8126"
